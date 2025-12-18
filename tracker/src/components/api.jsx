@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://remote-backend-vhyg.onrender.com"
-     // baseURL: "http://localhost:8000/api"
+    baseURL: "https://remote-backend-vhyg.onrender.com/api"
+    // baseURL: "http://localhost:8000/api"
     ,
     withCredentials: true, // only needed if cookies are used
 
