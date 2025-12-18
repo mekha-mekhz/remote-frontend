@@ -1,0 +1,188 @@
+import React, { useState } from "react";
+import api from "./api";
+import { useNavigate, Link } from "react-router-dom";
+
+function Register() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    position: "",
+    role: "user",
+    profilePhoto: null,
+  });
+
+  const [errors, setErrors] = useState({}); // ✅ State for validation errors
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "profilePhoto") {
+      setFormData({ ...formData, profilePhoto: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  // ✅ Manual frontend validation
+  const validate = () => {
+    const tempErrors = {};
+
+    if (!formData.name.trim()) tempErrors.name = "Name is required";
+
+    if (!formData.email) tempErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      tempErrors.email = "Invalid email format";
+
+    if (!formData.password) tempErrors.password = "Password is required";
+    else if (formData.password.length < 6)
+      tempErrors.password = "Password must be at least 6 characters";
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
+  };
+
+  const submit = async (e) => {
+    e.preventDefault();
+
+    if (!validate()) return; // ❌ Stop if validation fails
+
+    setLoading(true);
+    try {
+      const data = new FormData();
+      Object.keys(formData).forEach((key) => data.append(key, formData[key]));
+
+      await api.post("/register", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      alert("✅ Registered Successfully!");
+      navigate("/login");
+    } catch (err) {
+      alert(err.response?.data?.message || "❌ Registration failed");
+      console.error(err.response?.data || err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen px-4 
+      bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+
+      <form
+        onSubmit={submit}
+        className="bg-white/10 backdrop-blur-md border border-white/20 
+        rounded-2xl p-8 w-full max-w-sm shadow-2xl"
+      >
+        <h2 className="text-center text-3xl font-bold mb-6 bg-gradient-to-r 
+          from-lime-300 to-teal-300 text-transparent bg-clip-text">
+          Register
+        </h2>
+
+        {/* Name */}
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          onChange={handleChange}
+          className="w-full px-4 py-3 mb-1 bg-black/20 text-white rounded-lg 
+          focus:ring-2 focus:ring-teal-300 border border-white/20"
+        />
+        {errors.name && <p className="text-red-500 text-sm mb-2">{errors.name}</p>}
+
+        {/* Email */}
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          onChange={handleChange}
+          className="w-full px-4 py-3 mb-1 bg-black/20 text-white rounded-lg 
+          focus:ring-2 focus:ring-teal-300 border border-white/20"
+        />
+        {errors.email && <p className="text-red-500 text-sm mb-2">{errors.email}</p>}
+
+        {/* Password */}
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          onChange={handleChange}
+          className="w-full px-4 py-3 mb-1 bg-black/20 text-white rounded-lg 
+          focus:ring-2 focus:ring-teal-300 border border-white/20"
+        />
+        {errors.password && (
+          <p className="text-red-500 text-sm mb-2">{errors.password}</p>
+        )}
+
+        {/* Position */}
+        <input
+          type="text"
+          name="position"
+          placeholder="Position (e.g., Remote Developer)"
+          onChange={handleChange}
+          className="w-full px-4 py-3 mb-4 bg-black/20 text-white rounded-lg 
+          focus:ring-2 focus:ring-teal-300 border border-white/20"
+        />
+
+        {/* Profile Photo */}
+        <div className="w-full mb-4">
+          <input
+            type="file"
+            id="profilePhoto"
+            name="profilePhoto"
+            accept="image/*"
+            onChange={handleChange}
+            className="hidden"
+          />
+          <label
+            htmlFor="profilePhoto"
+            className="block w-full bg-black/20 border border-white/20 
+            rounded-lg px-3 py-3 text-sm cursor-pointer hover:bg-white/10"
+          >
+            Upload Profile Photo
+          </label>
+          {formData.profilePhoto && (
+            <p className="text-xs text-lime-300 mt-1">
+              Selected: {formData.profilePhoto.name}
+            </p>
+          )}
+        </div>
+
+        {/* Role */}
+        <select
+          name="role"
+          onChange={handleChange}
+          className="w-full px-4 py-3 mb-6 bg-black/20 text-white rounded-lg 
+          focus:ring-2 focus:ring-teal-300 border border-white/20"
+        >
+          <option value="user">User</option>
+          <option value="manager">Task Manager</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 rounded-lg bg-gradient-to-r 
+          from-lime-400 to-teal-400 text-black font-semibold shadow-lg 
+          hover:opacity-90 transition disabled:opacity-50"
+        >
+          {loading ? "Processing..." : "Register"}
+        </button>
+
+        <p className="text-center mt-4 text-gray-300 text-sm">
+          Already have an account?{" "}
+          <Link to="/login" className="text-teal-300 hover:underline">
+            Login
+          </Link>
+        </p>
+      </form>
+    </div>
+  );
+}
+
+export default Register;
