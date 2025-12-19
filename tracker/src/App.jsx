@@ -1,54 +1,67 @@
-// src/App.jsx
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Auth & common pages
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Home from "./pages/Home";
-import EmployeeDashboard from "./pages/EmpDashboard";
-import TaskManagerDashboard from "./pages/TaskmanagerDash";
-import AdminDashboard from "./pages/AdminDashboard";
 import Layout from "./components/Layout";
 import PrivateRoute from "./components/PrivateRoute";
+
+// User  pages
+import EmployeeDashboard from "./pages/EmpDashboard";
 import DailyLog from "./pages/DailyLog";
 import Productivity from "./pages/Productivity";
 import Notifications from "./pages/Notification";
 import ProductivityReport from "./pages/ProductivityReport";
 import ApplyLeave from "./pages/ApplyLeave";
 import PremiumFeatures from "./pages/Premiumfeatures";
+import PremiumDashboard from "./pages/PremiumDash";
 import Pricing from "./pages/Pricing";
-import AdminUsers from "./pages/Adminuser";
-import AdminTasks from "./pages/Admintask";
 import Attendance from "./pages/Attendance";
 import TimeTracker from "./pages/TimeTracker";
-import PremiumDashboard from "./pages/PremiumDash";
 import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
+import Chats from "./pages/Chats";
+import CreateDispute from "./pages/CreateDispute";
+import CreateReminder from "./pages/CreateReminder";
+import AllReminders from "./pages/AllReminders";
+
+// Manager pages
+import TaskManagerDashboard from "./pages/TaskmanagerDash";
 import ManagerTaskList from "./pages/Mangertask";
 import ManagerAddTask from "./pages/Mangeraddtask";
 import ManagerLeaves from "./pages/managerleave";
 import ManagerRecords from "./pages/managerrecord";
+import ProjectsPage from "./pages/ProjectsPage";
+import TeamsPage from "./pages/TeamsPage";
+import ManagerChat from "./pages/Mangerchat";
+
+// Admin pages
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminUsers from "./pages/Adminuser";
+import AdminTasks from "./pages/Admintask";
 import AdminReports from "./pages/AdminReports";
 import AdminRolePermissions from "./pages/AdminPermission";
 import AdminDisputes from "./pages/AdminDispute";
-import CreateDispute from "./pages/CreateDispute";
+import AdminEditDispute from "./pages/AdminEditDispute";
 import Approval from "./pages/Approval";
+import UserStatusAdmin from "./pages/UserStatusAdmin";
+
+// Password & payment pages
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import ProjectsPage from "./pages/ProjectsPage";
-import TeamsPage from "./pages/TeamsPage";
-import AllReminders from "./pages/AllReminders";
-import ManagerChat from "./pages/Mangerchat";
-import EditProfile from "./pages/EditProfile";
 import Success from "./pages/Success";
-import Chats from "./pages/Chats";
-import CreateReminder from "./pages/CreateReminder";
-import UserStatusAdmin from "./pages/UserStatusAdmin"
-import AdminEditDispute from "./pages/AdminEditDispute";
+import AdminAttendance from "./pages/AdminAttendance";
+
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Stripe success/cancel routes should be top-level */}
+        // Stripe success page
         <Route path="/paymentsuccess" element={<Success />} />
 
+        // Pricing page (logged-in users)
         <Route
           path="/pricing"
           element={
@@ -58,16 +71,17 @@ function App() {
           }
         />
 
-        {/* All other routes under Layout */}
+        // All layout-based routes
         <Route path="/" element={<Layout />}>
-          {/* Public Routes */}
+
+          // Public routes
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="reset-password" element={<ResetPassword />} />
 
-          {/* Employee Routes */}
+          // User (Employee) routes
           <Route
             path="dashboard"
             element={
@@ -132,8 +146,16 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="attendance" element={<Attendance />} />
+          <Route path="time" element={<TimeTracker />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="edit-profile" element={<EditProfile />} />
+          <Route path="chat" element={<Chats />} />
+          <Route path="disputes/create" element={<CreateDispute />} />
+          <Route path="createreminder" element={<CreateReminder />} />
+          <Route path="all-reminders" element={<AllReminders />} />
 
-          {/* Manager Routes */}
+          // Manager routes
           <Route
             path="taskmanager"
             element={
@@ -150,7 +172,7 @@ function App() {
           <Route path="manager/records" element={<ManagerRecords />} />
           <Route path="manager/chat" element={<ManagerChat />} />
 
-          {/* Admin Routes */}
+          // Admin routes
           <Route
             path="admin"
             element={
@@ -166,22 +188,8 @@ function App() {
           <Route path="admin/disputes" element={<AdminDisputes />} />
           <Route path="admin/approval" element={<Approval />} />
           <Route path="admin/user-status" element={<UserStatusAdmin />} />
-<Route
-  path="/admin/disputes/edit/:id"
-  element={<AdminEditDispute />}
-/>
-
-          {/* Other Routes */}
-          <Route path="leave" element={<ApplyLeave />} />
-          <Route path="attendance" element={<Attendance />} />
-          <Route path="time" element={<TimeTracker />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="edit-profile" element={<EditProfile />} />
-          <Route path="disputes/create" element={<CreateDispute />} />
-          <Route path="chat" element={<Chats />} />
-          <Route path="createreminder" element={<CreateReminder />} />
-          <Route path="/all-reminders" element={<AllReminders />} />
-
+          <Route path="admin/disputes/edit/:id" element={<AdminEditDispute />} />
+          <Route path="admin/attendance" element={<AdminAttendance/>} />
 
         </Route>
       </Routes>

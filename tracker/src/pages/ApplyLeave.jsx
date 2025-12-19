@@ -91,8 +91,8 @@ function ApplyLeave() {
               <option value="">Select Leave Type</option>
               <option value="sick">Sick Leave</option>
               <option value="casual">Casual Leave</option>
-              <option value="annual">Annual Leave</option>
-              <option value="emergency">Emergency Leave</option>
+              <option value="annual">Paid Leave</option>
+              <option value="emergency">other</option>
             </select>
             {errors.leaveType && <p className="text-red-400 text-sm mt-1">{errors.leaveType}</p>}
           </div>

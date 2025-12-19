@@ -45,35 +45,48 @@ function ManagerAddTask() {
     }));
   };
 
-  const handleAddTask = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post("/tasks", newTask, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+const handleAddTask = async (e) => {
+  e.preventDefault();
 
-      for (const userId of newTask.assignedTo) {
-        await api.post(
-          "/notifications/create",
-          {
-            title: "New Task Assigned",
-            message: `You have been assigned a new task: ${newTask.title}`,
-            type: "task",
-            userId,
-            role: "user",
-          },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-      }
+  if (newTask.assignedTo.length === 0) {
+    alert("Please assign at least one user");
+    return;
+  }
 
-      alert("Task added successfully and notification sent!");
-      setNewTask({ title: "", description: "", priority: "medium", assignedTo: [] });
-    } catch {
-      alert("Failed to add task");
+  try {
+    // 1️⃣ Create task
+    await api.post("/tasks", newTask, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    // 2️⃣ Send notification ONLY to assigned users
+    for (const userId of newTask.assignedTo) {
+      await api.post(
+        "/notifications/create",
+        {
+          title: "New Task Assigned",
+          message: `You have been assigned a new task: ${newTask.title}`,
+          type: "task",
+          userId: userId, // ✅ FIXED
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
     }
-  };
+
+    alert("Task added successfully and notifications sent!");
+    setNewTask({
+      title: "",
+      description: "",
+      priority: "medium",
+      assignedTo: [],
+    });
+  } catch (err) {
+    console.error("Task assign error:", err);
+    alert("Failed to add task");
+  }
+};
 
   return (
     <div className="p-6 bg-slate-950 min-h-screen">
