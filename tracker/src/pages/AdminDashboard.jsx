@@ -193,6 +193,8 @@ function AdminDashboard() {
           { label: "Manage Tasks", route: "/admin/tasks" },
           { label: "View Reports", route: "/admin/reports" },
           { label: "Disputes", route: "/admin/disputes" },
+          { label: "Status", route: "/admin/user-status" },
+
           
         ].map((btn, idx) => (
           <button
